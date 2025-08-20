@@ -1,20 +1,26 @@
 namespace MouseGile
 {
-    public partial class Form1 : Form
+    public partial class MouseGile : Form
     {
-        public Form1()
+        private RoundIndicator indicator;
+        public MouseGile()
         {
             InitializeComponent();
 
             jiggleTimer.Tick += new EventHandler(JiggleTimer_Tick);
 
-            // Set initial status text
-            lblStatus.Text = "Ready. Set duration in minutes.";
+            button1.Enabled = true;
+            button2.Enabled = false;
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            indicator = new RoundIndicator();
+            indicator.Location = new Point(this.ClientSize.Width - indicator.Width - 10, 10);
+            indicator.Size = new Size(25, 25);
+            indicator.IndicatorColor = Color.Red;
+            this.Controls.Add(indicator);
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -26,24 +32,36 @@ namespace MouseGile
         {
             if (!isRunning)
             {
-                int durationMinutes = (int)numericUpDown1.Value;
-                if (durationMinutes > 0)
+                int durationMinutes;
+
+                if (int.TryParse(textBox1.Text, out durationMinutes))
                 {
-                    isRunning = true;
-                    endTime = DateTime.Now.AddMinutes(durationMinutes);
+                    if (durationMinutes > 0)
+                    {
+                        isRunning = true;
+                        endTime = DateTime.Now.AddMinutes(durationMinutes);
 
-                    // Set the interval to 30 seconds (30,000 milliseconds)
-                    jiggleTimer.Interval = 30000;
-                    jiggleTimer.Start();
+                        jiggleTimer.Interval = 30000;
+                        jiggleTimer.Start();
 
-                    lblStatus.Text = $"Running for {durationMinutes} minutes...";
-                    button1.Enabled = false; // Disable Start button
-                    button2.Enabled = true;  // Enable Stop button
+                        lblStatus.Text = $"Running for {durationMinutes} minutes...";
+                        button1.Enabled = false;
+                        button2.Enabled = true; 
+                        indicator.IndicatorColor = Color.Green;
+                        indicator.Invalidate();
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please set a duration greater than zero.");
+                    }
                 }
                 else
                 {
-                    lblStatus.Text = "Please set a duration greater than zero.";
+                    MessageBox.Show("Please enter a valid number.");
                 }
+
+
             }
         }
 
@@ -53,9 +71,11 @@ namespace MouseGile
             {
                 isRunning = false;
                 jiggleTimer.Stop();
-                lblStatus.Text = "Stopped.";
+                lblStatus.Text = "";
                 button1.Enabled = true;
                 button2.Enabled = false;
+                indicator.IndicatorColor = Color.Red;
+                indicator.Invalidate();
             }
         }
 
@@ -100,5 +120,21 @@ namespace MouseGile
             TimeSpan remaining = endTime - DateTime.Now;
             lblStatus.Text = $"Running. Time Left: {remaining.Minutes}m {remaining.Seconds}s.";
         }
+
+        private void label1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+       
     }
 }
