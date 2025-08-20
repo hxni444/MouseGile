@@ -2,7 +2,8 @@
 MouseGile is a lightweight utility tool that allows you to giggle the mouse automatically within a given duration.
 
 # 🚀 Installation
-no need for installation just clone the project and use execute the exe
+no need for installation just clone the project
+>> Unzip the application folder and run the exe
 
 # 🤝 Contributing
 Contributions are welcome!
