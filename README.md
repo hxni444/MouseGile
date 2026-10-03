@@ -74,3 +74,8 @@ Contributions are welcome!
 
 ## 👨‍💻 Author
 Developed by **Hani Al Ziya**
+
+---
+
+## 📄 License
+This project is licensed under the [MIT License](LICENSE).

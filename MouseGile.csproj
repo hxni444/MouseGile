@@ -13,6 +13,7 @@
     <Product>MouseGile</Product>
     <Description>Lightweight automatic mouse jiggler and productivity utility</Description>
     <ApplicationIcon>mousegile.ico</ApplicationIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
