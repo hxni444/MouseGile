@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -16,6 +17,9 @@ namespace MouseGile
 
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+        private const int DWMWA_BORDER_COLOR = 34;
+        private const int DWMWA_CAPTION_COLOR = 35;
+        private const int DWMWA_TEXT_COLOR = 36;
 
         private const uint MOUSEEVENTF_MOVE = 0x0001;
         private const uint MOUSEEVENTF_WHEEL = 0x0800;
@@ -77,11 +81,11 @@ namespace MouseGile
         {
             EnableDarkMode(this.Handle);
 
-            // Add Round Status Indicator at top right
+            // Add Round Status Indicator at top right with proper margin
             indicator = new RoundIndicator
             {
                 Size = new Size(22, 22),
-                Location = new Point(this.ClientSize.Width - 34, 14),
+                Location = new Point(this.ClientSize.Width - 36, 14),
                 IndicatorColor = Color.FromArgb(239, 68, 68)
             };
             this.Controls.Add(indicator);
@@ -90,7 +94,7 @@ namespace MouseGile
             versionPill = new VersionPill
             {
                 Size = new Size(88, 24),
-                Location = new Point(this.ClientSize.Width - 34 - 88 - 8, 13)
+                Location = new Point(this.ClientSize.Width - 36 - 88 - 8, 13)
             };
             this.Controls.Add(versionPill);
 
@@ -107,6 +111,16 @@ namespace MouseGile
                 {
                     DwmSetWindowAttribute(handle, DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1, ref useDarkMode, sizeof(int));
                 }
+
+                // Set dark window border and caption to eliminate bright vertical lines on Windows 11
+                int darkBorder = ColorTranslator.ToWin32(Color.FromArgb(10, 10, 10));
+                DwmSetWindowAttribute(handle, DWMWA_BORDER_COLOR, ref darkBorder, sizeof(int));
+
+                int darkCaption = ColorTranslator.ToWin32(Color.FromArgb(10, 10, 10));
+                DwmSetWindowAttribute(handle, DWMWA_CAPTION_COLOR, ref darkCaption, sizeof(int));
+
+                int whiteText = ColorTranslator.ToWin32(Color.FromArgb(240, 240, 240));
+                DwmSetWindowAttribute(handle, DWMWA_TEXT_COLOR, ref whiteText, sizeof(int));
             }
             catch
             {
@@ -178,14 +192,11 @@ namespace MouseGile
 
         private void UpdateStatusDisplay(TimeSpan remaining)
         {
-            if (remaining.TotalHours >= 1)
-            {
-                lblStatus.Text = $"Time Left: {(int)remaining.TotalHours}h {remaining.Minutes:D2}m {remaining.Seconds:D2}s";
-            }
-            else
-            {
-                lblStatus.Text = $"Time Left: {remaining.Minutes:D2}m {remaining.Seconds:D2}s";
-            }
+            string timeText = remaining.TotalHours >= 1
+                ? $"{(int)remaining.TotalHours}h {remaining.Minutes:D2}m {remaining.Seconds:D2}s"
+                : $"{remaining.Minutes:D2}m {remaining.Seconds:D2}s";
+
+            lblStatus.Text = $"Time Left: {timeText}  •  Feel free to use the app";
         }
 
         private void StopSession(bool manual)

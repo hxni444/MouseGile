@@ -17,11 +17,12 @@ namespace MouseGile
     {
         private static readonly HttpClient httpClient = new HttpClient();
 
-        private string versionText = "v1.0.0";
-        private string statusText = "";
+        private string versionText = "v1.0.2";
         private bool isHovered = false;
         private bool isChecking = false;
         private bool hasUpdate = false;
+        private float spinnerAngle = 0f;
+        private readonly System.Windows.Forms.Timer animTimer = new System.Windows.Forms.Timer();
         private UpdateInfo? availableUpdate = null;
         private string? latestReleaseUrl = null;
         private string? latestVersionName = null;
@@ -32,6 +33,7 @@ namespace MouseGile
         public Color PillBorderColor { get; set; } = Color.FromArgb(55, 55, 55);
         public Color PillTextColor { get; set; } = Color.FromArgb(229, 229, 229);
         public Color UpdateBadgeColor { get; set; } = Color.FromArgb(16, 185, 129);
+        public Color SpinnerColor { get; set; } = Color.FromArgb(56, 189, 248);
 
         static VersionPill()
         {
@@ -51,7 +53,14 @@ namespace MouseGile
             {
                 InitialDelay = 200,
                 ReshowDelay = 100,
-                AutoPopDelay = 5000
+                AutoPopDelay = 6000
+            };
+
+            animTimer.Interval = 40;
+            animTimer.Tick += (s, e) =>
+            {
+                spinnerAngle = (spinnerAngle + 20f) % 360f;
+                Invalidate();
             };
 
             LoadVersion();
@@ -90,12 +99,12 @@ namespace MouseGile
         {
             if (isChecking)
             {
-                toolTip.SetToolTip(this, "Checking GitHub for updates...");
+                toolTip.SetToolTip(this, "Checking for updates in the background...\nFeel free to use the app while running.");
             }
             else if (hasUpdate)
             {
                 string targetVer = latestVersionName ?? availableUpdate?.TargetFullRelease.Version.ToString() ?? "New";
-                toolTip.SetToolTip(this, $"Update {targetVer} available on GitHub!\nClick to install or view release.");
+                toolTip.SetToolTip(this, $"Update {targetVer} available on GitHub!\nClick to download & install now.");
             }
             else
             {
@@ -108,7 +117,7 @@ namespace MouseGile
             if (isChecking) return;
 
             isChecking = true;
-            statusText = "Checking...";
+            animTimer.Start();
             UpdateToolTip();
             Invalidate();
 
@@ -119,14 +128,13 @@ namespace MouseGile
                 if (mgr.IsInstalled)
                 {
                     var newVersion = await mgr.CheckForUpdatesAsync();
-                    isChecking = false;
+                    StopCheckingAnimation();
 
                     if (newVersion != null)
                     {
                         hasUpdate = true;
                         availableUpdate = newVersion;
                         latestVersionName = newVersion.TargetFullRelease.Version.ToString();
-                        statusText = "Update!";
                         UpdateToolTip();
                         Invalidate();
 
@@ -166,10 +174,9 @@ namespace MouseGile
 
                                 if (Version.TryParse(cleanTag, out var remoteVer) && Version.TryParse(cleanCurrent, out var localVer) && remoteVer > localVer)
                                 {
-                                    isChecking = false;
+                                    StopCheckingAnimation();
                                     hasUpdate = true;
                                     latestVersionName = $"v{remoteVer}";
-                                    statusText = "Update!";
                                     UpdateToolTip();
                                     Invalidate();
 
@@ -195,9 +202,8 @@ namespace MouseGile
                     }
                 }
 
-                isChecking = false;
+                StopCheckingAnimation();
                 hasUpdate = false;
-                statusText = "";
                 UpdateToolTip();
                 Invalidate();
 
@@ -208,8 +214,7 @@ namespace MouseGile
             }
             catch (Exception ex)
             {
-                isChecking = false;
-                statusText = "";
+                StopCheckingAnimation();
                 UpdateToolTip();
                 Invalidate();
                 if (showNoUpdateMessage)
@@ -219,11 +224,18 @@ namespace MouseGile
             }
         }
 
+        private void StopCheckingAnimation()
+        {
+            isChecking = false;
+            animTimer.Stop();
+        }
+
         private async Task ApplyUpdateAsync(UpdateManager mgr, UpdateInfo newVersion)
         {
             try
             {
-                statusText = "Downloading...";
+                isChecking = true;
+                animTimer.Start();
                 Invalidate();
 
                 await mgr.DownloadUpdatesAsync(newVersion);
@@ -231,7 +243,7 @@ namespace MouseGile
             }
             catch (Exception ex)
             {
-                statusText = "";
+                StopCheckingAnimation();
                 Invalidate();
                 MessageBox.Show($"Failed to apply update: {ex.Message}", "Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -305,23 +317,38 @@ namespace MouseGile
                     e.Graphics.DrawPath(pen, path);
                 }
 
-                // Dot Indicator (green if update available, warning yellow if checking, sky blue otherwise)
-                int dotSize = 6;
-                int dotX = 9;
+                // Left Indicator: Animated Spinner or Static Dot
+                int dotSize = 8;
+                int dotX = 8;
                 int dotY = (this.Height - dotSize) / 2;
-                Color dotColor = hasUpdate ? UpdateBadgeColor : (isChecking ? Color.FromArgb(245, 158, 11) : Color.FromArgb(56, 189, 248));
-                using (SolidBrush dotBrush = new SolidBrush(dotColor))
+
+                if (isChecking)
                 {
-                    e.Graphics.FillEllipse(dotBrush, dotX, dotY, dotSize, dotSize);
+                    // Smooth spinning loader arc
+                    using (Pen spinnerPen = new Pen(SpinnerColor, 1.8f))
+                    {
+                        spinnerPen.StartCap = LineCap.Round;
+                        spinnerPen.EndCap = LineCap.Round;
+                        e.Graphics.DrawArc(spinnerPen, dotX - 1, dotY - 1, dotSize + 2, dotSize + 2, spinnerAngle, 220);
+                    }
+                }
+                else
+                {
+                    // Static dot indicator
+                    Color dotColor = hasUpdate ? UpdateBadgeColor : Color.FromArgb(56, 189, 248);
+                    using (SolidBrush dotBrush = new SolidBrush(dotColor))
+                    {
+                        e.Graphics.FillEllipse(dotBrush, dotX + 1, dotY + 1, 6, 6);
+                    }
                 }
 
-                // Text
-                string displayText = string.IsNullOrEmpty(statusText) ? versionText : (hasUpdate ? $"{versionText} • ⬆" : statusText);
+                // Version Text: Always keeps the version number displayed
+                string displayText = hasUpdate ? $"{versionText} • ⬆" : versionText;
                 Color currentTextColor = hasUpdate ? Color.FromArgb(167, 243, 208) : PillTextColor;
 
                 using (SolidBrush textBrush = new SolidBrush(currentTextColor))
                 {
-                    var textRect = new Rectangle(dotX + dotSize + 5, 0, this.Width - (dotX + dotSize + 10), this.Height);
+                    var textRect = new Rectangle(dotX + dotSize + 4, 0, this.Width - (dotX + dotSize + 8), this.Height);
                     var stringFormat = new StringFormat
                     {
                         Alignment = StringAlignment.Near,
@@ -351,6 +378,7 @@ namespace MouseGile
         {
             if (disposing)
             {
+                animTimer?.Dispose();
                 toolTip?.Dispose();
             }
             base.Dispose(disposing);

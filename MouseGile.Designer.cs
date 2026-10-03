@@ -12,7 +12,6 @@ namespace MouseGile
         private Button button2;
         private Label label1;
         private TextBox textBox1;
-        private Label label2;
 
         /// <summary>
         ///  Clean up any resources being used.
@@ -40,17 +39,16 @@ namespace MouseGile
             button2 = new Button();
             label1 = new Label();
             textBox1 = new TextBox();
-            label2 = new Label();
             SuspendLayout();
             // 
             // lblStatus
             // 
             lblStatus.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lblStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblStatus.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             lblStatus.ForeColor = Color.FromArgb(220, 220, 225);
-            lblStatus.Location = new Point(38, 186);
+            lblStatus.Location = new Point(20, 186);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(324, 24);
+            lblStatus.Size = new Size(360, 24);
             lblStatus.TabIndex = 0;
             lblStatus.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -115,26 +113,18 @@ namespace MouseGile
             textBox1.Size = new Size(324, 32);
             textBox1.TabIndex = 1;
             // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(38, 110);
-            label2.Name = "label2";
-            label2.Size = new Size(0, 15);
-            label2.TabIndex = 6;
-            // 
             // MouseGile
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(10, 10, 10);
             ClientSize = new Size(400, 225);
-            Controls.Add(label2);
             Controls.Add(textBox1);
             Controls.Add(label1);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(lblStatus);
+            DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Name = "MouseGile";
