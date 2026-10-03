@@ -1,31 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MouseGile
 {
     public class RoundIndicator : Control
     {
-        public Color IndicatorColor { get; set; } = Color.Red;
+        private Color _indicatorColor = Color.FromArgb(239, 68, 68); // Soft modern red
+
+        public Color IndicatorColor
+        {
+            get => _indicatorColor;
+            set
+            {
+                _indicatorColor = value;
+                Invalidate();
+            }
+        }
 
         public RoundIndicator()
         {
-            this.DoubleBuffered = true;   // reduce flicker
-            this.ResizeRedraw = true;     // redraw on resize
-            this.Width = this.Height = 30; // default size
+            this.DoubleBuffered = true;
+            this.ResizeRedraw = true;
+            this.Width = this.Height = 22;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            using (Brush brush = new SolidBrush(IndicatorColor))
+            // Outer subtle translucent ring
+            using (Brush bgBrush = new SolidBrush(Color.FromArgb(40, _indicatorColor)))
             {
-                // Only fill, no border
-                e.Graphics.FillEllipse(brush, 0, 0, this.Width - 1, this.Height - 1);
+                e.Graphics.FillEllipse(bgBrush, 0, 0, this.Width - 1, this.Height - 1);
+            }
+
+            // Inner solid glowing dot
+            int inset = 3;
+            using (Brush brush = new SolidBrush(_indicatorColor))
+            {
+                e.Graphics.FillEllipse(brush, inset, inset, this.Width - 1 - (inset * 2), this.Height - 1 - (inset * 2));
             }
         }
     }
