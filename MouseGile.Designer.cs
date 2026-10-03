@@ -46,27 +46,28 @@ namespace MouseGile
             // lblStatus
             // 
             lblStatus.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lblStatus.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            lblStatus.ForeColor = Color.FromArgb(250, 250, 250);
-            lblStatus.Location = new Point(38, 242);
+            lblStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblStatus.ForeColor = Color.FromArgb(220, 220, 225);
+            lblStatus.Location = new Point(38, 186);
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(324, 26);
+            lblStatus.Size = new Size(324, 24);
             lblStatus.TabIndex = 0;
             lblStatus.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // button1
             // 
-            button1.BackColor = Color.FromArgb(22, 163, 74);
+            button1.BackColor = Color.FromArgb(24, 24, 27);
             button1.Cursor = Cursors.Hand;
-            button1.FlatAppearance.BorderSize = 0;
-            button1.FlatAppearance.MouseOverBackColor = Color.FromArgb(21, 128, 61);
-            button1.FlatAppearance.MouseDownBackColor = Color.FromArgb(20, 83, 45);
+            button1.FlatAppearance.BorderColor = Color.FromArgb(50, 50, 55);
+            button1.FlatAppearance.BorderSize = 1;
+            button1.FlatAppearance.MouseOverBackColor = Color.FromArgb(38, 38, 42);
+            button1.FlatAppearance.MouseDownBackColor = Color.FromArgb(18, 18, 20);
             button1.FlatStyle = FlatStyle.Flat;
-            button1.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            button1.ForeColor = Color.White;
-            button1.Location = new Point(38, 150);
+            button1.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            button1.ForeColor = Color.FromArgb(220, 220, 225);
+            button1.Location = new Point(38, 126);
             button1.Name = "button1";
-            button1.Size = new Size(150, 75);
+            button1.Size = new Size(155, 40);
             button1.TabIndex = 2;
             button1.Text = "START";
             button1.UseVisualStyleBackColor = false;
@@ -74,17 +75,18 @@ namespace MouseGile
             // 
             // button2
             // 
-            button2.BackColor = Color.FromArgb(220, 38, 38);
+            button2.BackColor = Color.FromArgb(24, 24, 27);
             button2.Cursor = Cursors.Hand;
-            button2.FlatAppearance.BorderSize = 0;
-            button2.FlatAppearance.MouseOverBackColor = Color.FromArgb(185, 28, 28);
-            button2.FlatAppearance.MouseDownBackColor = Color.FromArgb(127, 29, 29);
+            button2.FlatAppearance.BorderColor = Color.FromArgb(50, 50, 55);
+            button2.FlatAppearance.BorderSize = 1;
+            button2.FlatAppearance.MouseOverBackColor = Color.FromArgb(38, 38, 42);
+            button2.FlatAppearance.MouseDownBackColor = Color.FromArgb(18, 18, 20);
             button2.FlatStyle = FlatStyle.Flat;
-            button2.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            button2.ForeColor = Color.White;
-            button2.Location = new Point(212, 150);
+            button2.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            button2.ForeColor = Color.FromArgb(220, 220, 225);
+            button2.Location = new Point(207, 126);
             button2.Name = "button2";
-            button2.Size = new Size(150, 75);
+            button2.Size = new Size(155, 40);
             button2.TabIndex = 3;
             button2.Text = "STOP";
             button2.UseVisualStyleBackColor = false;
@@ -93,30 +95,30 @@ namespace MouseGile
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            label1.ForeColor = Color.FromArgb(163, 163, 163);
-            label1.Location = new Point(38, 54);
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
+            label1.ForeColor = Color.FromArgb(145, 145, 150);
+            label1.Location = new Point(38, 50);
             label1.Name = "label1";
-            label1.Size = new Size(155, 17);
+            label1.Size = new Size(130, 15);
             label1.TabIndex = 4;
             label1.Text = "Set duration in minutes";
             // 
             // textBox1
             // 
-            textBox1.BackColor = Color.FromArgb(23, 23, 23);
+            textBox1.BackColor = Color.FromArgb(20, 20, 22);
             textBox1.BorderStyle = BorderStyle.FixedSingle;
-            textBox1.Font = new Font("Segoe UI", 16F);
-            textBox1.ForeColor = Color.FromArgb(255, 255, 255);
-            textBox1.Location = new Point(38, 77);
+            textBox1.Font = new Font("Segoe UI", 14F);
+            textBox1.ForeColor = Color.FromArgb(240, 240, 240);
+            textBox1.Location = new Point(38, 72);
             textBox1.Name = "textBox1";
             textBox1.PlaceholderText = "e.g. 30";
-            textBox1.Size = new Size(324, 36);
+            textBox1.Size = new Size(324, 32);
             textBox1.TabIndex = 1;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(38, 121);
+            label2.Location = new Point(38, 110);
             label2.Name = "label2";
             label2.Size = new Size(0, 15);
             label2.TabIndex = 6;
@@ -126,7 +128,7 @@ namespace MouseGile
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(10, 10, 10);
-            ClientSize = new Size(400, 280);
+            ClientSize = new Size(400, 225);
             Controls.Add(label2);
             Controls.Add(textBox1);
             Controls.Add(label1);
