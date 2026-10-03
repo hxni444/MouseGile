@@ -96,6 +96,17 @@ namespace MouseGile
                 Size = new Size(88, 24),
                 Location = new Point(this.ClientSize.Width - 36 - 88 - 8, 13)
             };
+            versionPill.CheckingStateChanged += (isChecking) =>
+            {
+                if (this.IsDisposed) return;
+                this.BeginInvoke(() =>
+                {
+                    if (!isRunning)
+                    {
+                        lblStatus.Text = isChecking ? "Checking for updates • Feel free to use the app" : "";
+                    }
+                });
+            };
             this.Controls.Add(versionPill);
 
             // Check for updates in the background without popups unless an update is found
@@ -192,11 +203,14 @@ namespace MouseGile
 
         private void UpdateStatusDisplay(TimeSpan remaining)
         {
-            string timeText = remaining.TotalHours >= 1
-                ? $"{(int)remaining.TotalHours}h {remaining.Minutes:D2}m {remaining.Seconds:D2}s"
-                : $"{remaining.Minutes:D2}m {remaining.Seconds:D2}s";
-
-            lblStatus.Text = $"Time Left: {timeText}  •  Feel free to use the app";
+            if (remaining.TotalHours >= 1)
+            {
+                lblStatus.Text = $"Time Left: {(int)remaining.TotalHours}h {remaining.Minutes:D2}m {remaining.Seconds:D2}s";
+            }
+            else
+            {
+                lblStatus.Text = $"Time Left: {remaining.Minutes:D2}m {remaining.Seconds:D2}s";
+            }
         }
 
         private void StopSession(bool manual)

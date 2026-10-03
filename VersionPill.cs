@@ -17,7 +17,7 @@ namespace MouseGile
     {
         private static readonly HttpClient httpClient = new HttpClient();
 
-        private string versionText = "v1.0.2";
+        private string versionText = "v1.0.3";
         private bool isHovered = false;
         private bool isChecking = false;
         private bool hasUpdate = false;
@@ -27,6 +27,8 @@ namespace MouseGile
         private string? latestReleaseUrl = null;
         private string? latestVersionName = null;
         private ToolTip toolTip;
+
+        public event Action<bool>? CheckingStateChanged;
 
         public Color PillBackColor { get; set; } = Color.FromArgb(20, 20, 20);
         public Color PillHoverColor { get; set; } = Color.FromArgb(38, 38, 38);
@@ -118,6 +120,7 @@ namespace MouseGile
 
             isChecking = true;
             animTimer.Start();
+            CheckingStateChanged?.Invoke(true);
             UpdateToolTip();
             Invalidate();
 
@@ -228,6 +231,7 @@ namespace MouseGile
         {
             isChecking = false;
             animTimer.Stop();
+            CheckingStateChanged?.Invoke(false);
         }
 
         private async Task ApplyUpdateAsync(UpdateManager mgr, UpdateInfo newVersion)
