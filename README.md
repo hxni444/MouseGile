@@ -19,7 +19,6 @@ MouseGile is a lightweight utility tool that keeps your system active by automat
 - ⏱️ **Real-Time Countdown**: Per-second countdown timer dynamically showing the exact time left.
 - 🔄 **Smart Jiggler**: Subtly moves the cursor and triggers minor wheel scrolls every 30 seconds without interfering with your workflow.
 - 🏷️ **Interactive Version Pill**: Shows the active version (e.g. `v1.0.0`) and lets you check for and apply updates with a single click.
-- 📦 **Velopack Integration**: Seamless installer generation, delta updates, and automatic in-app updates via GitHub Releases.
 - 💡 **Status Indicator**: Visual glowing round indicator showing active (green) and idle (red) states.
 - 🌙 **Pitch Black Theme**: Modern OLED pure black UI with native dark title bar support.
 
